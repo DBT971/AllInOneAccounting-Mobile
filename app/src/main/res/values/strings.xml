@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">All In One Accounting Mobile</string>
+
+    <!-- Menu -->
+    <string name="menu_settings">Settings</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_preferences_header">Preferences</string>
+    <string name="settings_info_restart_required">You will need to restart the application for this to take an effect.</string>
+    <string name="settings_theme_title">Light Mode</string>
+    <string name="settings_theme_summary_disabled">Light Mode Disabled</string>
+    <string name="settings_theme_summary_enabled">Light Mode Enabled</string>
+
+    <!-- Splash -->
+
+    <string name="splash_welcome">Welcome to AiOA</string>
+    <string name="splash_notice" translatable="false">COPYRIGHT © 2021 AiOA. All rights reserved.</string>
+
 </resources>
