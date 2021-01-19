@@ -1,0 +1,18 @@
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+
+    <androidx.preference.PreferenceCategory app:title="@string/settings_preferences_header">
+
+        <androidx.preference.SwitchPreferenceCompat
+            android:id="@+id/pcLightMode"
+            app:key="light_mode"
+            app:summaryOff="@string/settings_theme_summary_disabled"
+            app:summaryOn="@string/settings_theme_summary_enabled"
+            app:title="@string/settings_theme_title"
+            />
+    </androidx.preference.PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>
