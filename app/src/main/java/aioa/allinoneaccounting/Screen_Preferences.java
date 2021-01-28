@@ -29,7 +29,7 @@ public class Screen_Preferences extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         setTheme(getApplicationInfo().theme);
 
-        prefEd = getSharedPreferences(name:"light_mode", MODE_PRIVATE).edit();
+        prefEd = getSharedPreferences("light_mode", MODE_PRIVATE).edit();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
@@ -69,10 +69,10 @@ public class Screen_Preferences extends AppCompatActivity {
                 return true;
             });
         }
-    }
 
-    private void updateTheme(String summary){
-        prefEd.putString("light_mode",summary);
-        prefEd.commit();
+        private void updateTheme(String summary){
+            prefEd.putString("light_mode",summary);
+            prefEd.commit();
+        }
     }
 }

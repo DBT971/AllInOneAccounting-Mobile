@@ -17,7 +17,6 @@
         <item name="android:colorBackground">@color/light_background</item>
         <item name="android:itemBackground">@color/light_background</item>
         <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Borderless</item>
-        <item name="backgroundSelected">@color/light_selection</item>
         <item name="android:checkboxStyle">@style/lightTheme.CheckBox</item>
         <item name="alertDialogTheme">@style/lightTheme.Dialog</item>
         <item name="android:textColorHint">@color/light_hint</item>
@@ -42,7 +41,6 @@
         <item name="android:colorBackground">@color/dark_background</item>
         <item name="android:itemBackground">@color/light_text</item>
         <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Borderless</item>
-        <item name="backgroundSelected">@color/dark_selection</item>
         <item name="android:checkboxStyle">@style/darkTheme.CheckBox</item>
         <item name="alertDialogTheme">@style/darkTheme.Dialog</item>
         <item name="android:textColorHint">@color/dark_hint</item>
