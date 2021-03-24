@@ -1,23 +1,15 @@
 package aioa.allinoneaccounting;
 
-import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
@@ -29,8 +21,14 @@ public class Screen_Preferences extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         setTheme(getApplicationInfo().theme);
 
+        /**
+         * Gets the light mode preference.
+         */
         prefEd = getSharedPreferences("light_mode", MODE_PRIVATE).edit();
 
+        /**
+         * Loads up the preferences fragment for this page.
+         */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
         getSupportFragmentManager()
@@ -47,6 +45,9 @@ public class Screen_Preferences extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item){
+        /**
+         * If the Home button is pressed, go back to the previous screen.
+         */
         if(item.getItemId() == android.R.id.home){
             NavUtils.navigateUpFromSameTask(this);
             return true;
@@ -57,6 +58,9 @@ public class Screen_Preferences extends AppCompatActivity {
     public static class SettingsFragment extends PreferenceFragmentCompat{
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey){
+            /**
+             * When the fragment is created, load up the preferences for the settings menu
+             */
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
             SwitchPreferenceCompat lightMode = findPreference("light_mode");
             lightMode.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -70,6 +74,10 @@ public class Screen_Preferences extends AppCompatActivity {
             });
         }
 
+        /**
+         * If the Light Mode setting is changed, update light mode
+         * @param summary A string value of whether Light Mode is Enabled or Disabled.
+         */
         private void updateTheme(String summary){
             prefEd.putString("light_mode",summary);
             prefEd.commit();

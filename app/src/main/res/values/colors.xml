@@ -12,7 +12,7 @@
 
     <!-- Dark Theme colours -->
     <color name="dark_background">#0D1F2D</color>
-    <color name="dark_text">#E8CA82</color>
     <color name="dark_selection">#224159</color>
+    <color name="dark_text">#ffffff</color>
     <color name="dark_hint">#6f828c</color>
 </resources>
