@@ -13,19 +13,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="aioa.allinoneaccounting.Screen_Preferences"
+            android:name="aioa.allinoneaccounting.Screen_Settings"
             android:label="Settings"
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="aioa.allinoneaccounting.MainActivity"/>
+                android:value="aioa.allinoneaccounting.Screen_Menu"/>
         </activity>
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name=".Screen_Menu">
+        </activity>
+        <activity android:name=".Screen_Login">
+        </activity>
+        <activity android:name=".Screen_Pattern">
         </activity>
         <activity android:name="aioa.allinoneaccounting.Screen_Splash">
             <intent-filter>

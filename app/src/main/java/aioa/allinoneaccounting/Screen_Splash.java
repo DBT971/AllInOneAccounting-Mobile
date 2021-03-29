@@ -14,6 +14,9 @@ public class Screen_Splash extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
+        /**
+         * Checks what the current theme is set to, and then changes the theme to match
+         */
         SharedPreferences pref = getSharedPreferences("light_mode", MODE_PRIVATE);
         final String lmSummary = pref.getString("light_mode", "");
         if (lmSummary.equals(getApplicationContext().getString(R.string.settings_theme_summary_disabled))){
@@ -24,38 +27,15 @@ public class Screen_Splash extends AppCompatActivity {
             getApplicationContext().setTheme(R.style.lightTheme);
             getApplicationInfo().theme = R.style.lightTheme;
         }
-
         setTheme(getApplicationInfo().theme);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.screen_splash);
 
         new Handler().postDelayed(() -> {
-            if (checkPref(this, "first")){
-                launchWelcome();
-            }
-            else {
-                Intent splashIntent = new Intent(Screen_Splash.this, MainActivity.class);
-                startActivity(splashIntent);
-            }
+            Intent splashIntent = new Intent(Screen_Splash.this, Screen_Login.class);
+            startActivity(splashIntent);
             finish();
         },SPLASH_TIME_OUT);
     }
-
-    public void launchWelcome() {
-        Intent welcomeIntent = new Intent(Screen_Splash.this, Screen_Welcome.class);
-        startActivity(welcomeIntent);
-        changePrefs(this, "first");
-        finish();
-    }
-
-    public static boolean checkPref(Context context, String prefKey){
-        return context.getSharedPreferences("prefs",MODE_PRIVATE).getBoolean(prefKey, true);
-    }
-
-
-    public static void changePrefs(Context context,String key){
-        SharedPreferences.Editor editor = context.getSharedPreferences("prefs",MODE_PRIVATE).edit();
-        editor.putBoolean(key,false);
-        editor.apply();
-    }}
+}

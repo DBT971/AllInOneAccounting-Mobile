@@ -6,6 +6,12 @@
 
     <androidx.preference.PreferenceCategory app:title="@string/settings_preferences_header">
 
+        <androidx.preference.Preference
+            android:id="@+id/pcPattern"
+            app:key="pattern"
+            app:summary="@string/settings_pattern_summary_disabled"
+            app:title="@string/settings_pattern_title" />
+
         <androidx.preference.SwitchPreferenceCompat
             android:id="@+id/pcLightMode"
             app:key="light_mode"

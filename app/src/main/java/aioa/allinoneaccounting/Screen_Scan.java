@@ -1,4 +1,4 @@
 package aioa.allinoneaccounting;
 
-public class Screen_Welcome {
+public class Screen_Scan {
 }

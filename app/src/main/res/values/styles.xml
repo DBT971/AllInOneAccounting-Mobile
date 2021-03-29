@@ -5,7 +5,6 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="lightTheme" parent="AppTheme">
@@ -20,6 +19,7 @@
         <item name="android:checkboxStyle">@style/lightTheme.CheckBox</item>
         <item name="alertDialogTheme">@style/lightTheme.Dialog</item>
         <item name="android:textColorHint">@color/light_hint</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <!-- Tweak to checkbox -->
@@ -44,6 +44,7 @@
         <item name="android:checkboxStyle">@style/darkTheme.CheckBox</item>
         <item name="alertDialogTheme">@style/darkTheme.Dialog</item>
         <item name="android:textColorHint">@color/dark_hint</item>
+        <item name="colorAccent">@color/colorAccentDark</item>
     </style>
 
     <!-- Tweak to checkbox -->
