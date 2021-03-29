@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#E9105F</color>
+    <color name="colorPrimaryDark">#3333cc</color>
+    <color name="colorPrimary">#6666ff</color>
+    <color name="colorAccentDark">#cc99ff</color>
+    <color name="colorAccent">#cc33ff</color>
+    <color name="colorSuccess">#33cc33</color>
+    <color name="colorIncorrect">#cc0000</color>
 
     <!-- Light Theme colours -->
     <color name="light_background">#ffffff</color>
-    <color name="light_selection">#CCCCCC</color>
+    <color name="light_selection">#ffffff</color>
     <color name="light_text">#211f22</color>
     <color name="light_hint">#999999</color>
 
