@@ -14,6 +14,11 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_account">Account Details</string>
 
+    <!-- Scan -->
+    <string name="scan_capture">Take a picture</string>
+    <string name="scan_detect">Detect text</string>
+    <string name="scan_empty">No text found</string>
+    <string name="scan_desc">Take a photo to scan</string>
     <!-- Settings -->
     <string name="settings_title">Settings</string>
     <string name="settings_preferences_header">Preferences</string>

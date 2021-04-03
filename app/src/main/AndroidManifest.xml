@@ -24,7 +24,7 @@
         <activity android:name=".Screen_Menu" />
         <activity android:name=".Screen_Login" />
         <activity android:name=".Screen_Pattern" />
-        <activity android:name=".Screen_Scan"/>
+        <activity android:name=".Screen_Scanner"/>
         <activity android:name="aioa.allinoneaccounting.Screen_Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

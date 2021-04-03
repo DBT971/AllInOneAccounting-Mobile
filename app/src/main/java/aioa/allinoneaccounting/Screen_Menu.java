@@ -16,7 +16,7 @@ public class Screen_Menu extends AppCompatActivity {
     }
 
     public void open_scan(View view){
-        Intent scan_intent = new Intent(this, Screen_Scan.class);
+        Intent scan_intent = new Intent(this, Screen_Scanner.class);
         startActivity(scan_intent);
     }
 
