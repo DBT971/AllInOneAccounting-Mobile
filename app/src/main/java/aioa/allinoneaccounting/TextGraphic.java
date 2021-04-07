@@ -46,7 +46,7 @@ public class TextGraphic extends GraphicOverlay.Graphic {
         textPaint = new Paint();
         textPaint.setColor(TEXT_COLOR);
         textPaint.setTextSize(TEXT_SIZE);
-        // Redraw the overlay, as this graphic has been added.
+
         postInvalidate();
     }
 
@@ -57,11 +57,9 @@ public class TextGraphic extends GraphicOverlay.Graphic {
             throw new IllegalStateException("Attempting to draw a null text.");
         }
 
-        // Draws the bounding box around the TextBlock.
         RectF rect = new RectF(element.getBoundingBox());
         canvas.drawRect(rect, rectPaint);
 
-        // Renders the text at the bottom of the box.
         canvas.drawText(element.getText(), rect.left, rect.bottom, textPaint);
     }
 }
