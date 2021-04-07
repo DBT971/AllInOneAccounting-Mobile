@@ -24,6 +24,11 @@ import com.google.mlkit.vision.text.Text;
 
 public class TextGraphic extends GraphicOverlay.Graphic {
 
+    /**
+     * NOTICE OF CHANGES:
+     * - Removed comments from code
+     * - Changed @TEXT_COLOR to BLUE from RED
+     */
     private static final String TAG = "TextGraphic";
     private static final int TEXT_COLOR = Color.BLUE;
     private static final float TEXT_SIZE = 54.0f;

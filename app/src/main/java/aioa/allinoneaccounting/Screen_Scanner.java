@@ -124,19 +124,13 @@ public class Screen_Scanner extends AppCompatActivity {
                 Toast.makeText(this, R.string.scan_fail, Toast.LENGTH_SHORT).show();
             }
 
-            Pair<Integer, Integer> target_size = getTargetedWidthHeight();
-            int target_width = target_size.first;
-            int max_height = target_size.second;
-            float scaleFactor =
-                  Math.max((float) bit_image.getWidth() / (float) target_width,
-                  (float) bit_image.getHeight() / (float) max_height);
-            Bitmap resized_bitmap = Bitmap.createScaledBitmap(
-                  bit_image,
-                  (int) (bit_image.getWidth() / scaleFactor),
-                  (int) (bit_image.getHeight() / scaleFactor), true);
-
             image_preview.setRotation(rotation);
-            image_preview.setImageBitmap(resized_bitmap);
+            image_preview.setImageBitmap(bit_image);
+            System.out.println("Old Image: " + bit_image.getHeight() + " " + bit_image.getWidth());
+            System.out.println("Image View Max Size: " + image_preview.getMaxHeight() + " " + image_preview.getMaxWidth());
+            System.out.println("Image View size: " + image_preview.getHeight() + " " + image_preview.getWidth());
+            graphic_overlay.clear();
+
 
         }
         else{
@@ -185,19 +179,25 @@ public class Screen_Scanner extends AppCompatActivity {
     }
 
     public void text_recognition(){
-        InputImage image = InputImage.fromBitmap(bit_image, rotation);
-        TextRecognizer recognizer = TextRecognition.getClient();
-        recognizer.process(image)
-                .addOnSuccessListener(
-                        texts -> {
-                            processTextRecognitionResult(texts);
-                        })
-                .addOnFailureListener(
-                        e -> {
-                            // Task failed with an exception
-                            Toast.makeText(this, R.string.scan_fail, Toast.LENGTH_SHORT).show();
-                            e.printStackTrace();
-                        });
+        try{
+            InputImage image = InputImage.fromBitmap(bit_image, rotation);
+
+            TextRecognizer recognizer = TextRecognition.getClient();
+            recognizer.process(image)
+                    .addOnSuccessListener(
+                            texts -> {
+                                processTextRecognitionResult(texts);
+                            })
+                    .addOnFailureListener(
+                            e -> {
+                                // Task failed with an exception
+                                Toast.makeText(this, R.string.scan_fail, Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            });
+        } catch (Exception ex){
+            Toast.makeText(this, R.string.scan_no_image, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void processTextRecognitionResult(Text texts) {
@@ -208,10 +208,13 @@ public class Screen_Scanner extends AppCompatActivity {
         }
         graphic_overlay.clear();
         for (int i = 0; i < blocks.size(); i++) {
+            System.out.println("BLOCK: " + blocks.get(i).getText());
             List<Text.Line> lines = blocks.get(i).getLines();
             for (int j = 0; j < lines.size(); j++) {
+                System.out.println("LINE: " + lines.get(j).getText());
                 List<Text.Element> elements = lines.get(j).getElements();
                 for (int k = 0; k < elements.size(); k++) {
+                    System.out.println("ELEMENT: " + elements.get(k).getText());
                     GraphicOverlay.Graphic textGraphic = new TextGraphic(graphic_overlay, elements.get(k));
                     graphic_overlay.add(textGraphic);
 
