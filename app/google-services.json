@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "534954510896",
+    "project_id": "all-in-one-6100f",
+    "storage_bucket": "all-in-one-6100f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:534954510896:android:1cc3d0dc838bd774ebbbf5",
+        "android_client_info": {
+          "package_name": "aioa.allinoneaccounting"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "534954510896-m56636cc6tlsb2qpdufa8khcv5s4hmj0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDLg59e0DTgNCBavddotUy92lepXa7VmY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "534954510896-m56636cc6tlsb2qpdufa8khcv5s4hmj0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

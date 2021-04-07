@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:allowBackup="true"
@@ -12,6 +13,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="aioa.Scanner.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
+
         <activity
             android:name="aioa.allinoneaccounting.Screen_Settings"
             android:label="Settings"
@@ -20,12 +31,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="aioa.allinoneaccounting.Screen_Menu"/>
         </activity>
-        <activity android:name=".Screen_Menu">
-        </activity>
-        <activity android:name=".Screen_Login">
-        </activity>
-        <activity android:name=".Screen_Pattern">
-        </activity>
+        <activity android:name=".Screen_Menu" />
+        <activity android:name=".Screen_Login" />
+        <activity android:name=".Screen_Pattern" />
+        <activity android:name=".Screen_Scanner"/>
         <activity android:name="aioa.allinoneaccounting.Screen_Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,6 +42,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="ocr" />
+
+
     </application>
 
 </manifest>
