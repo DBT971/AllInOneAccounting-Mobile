@@ -41,7 +41,9 @@ public class Screen_Scanner extends AppCompatActivity {
     private ImageView imagePreview;
     private Button captureButton;
     private Button detectButton;
+    private Button sendButton;
     private Bitmap bitImage;
+    private boolean scanned = false;
     private static String camDirect = "";
     private static String debugDirect = "";
     private File photoFile;
@@ -80,9 +82,11 @@ public class Screen_Scanner extends AppCompatActivity {
         imagePreview = findViewById(R.id.image_view);
         captureButton = findViewById(R.id.capture_image);
         detectButton = findViewById(R.id.detect_image);
+        sendButton = findViewById(R.id.send_details);
 
         captureButton.setOnClickListener(v -> launchCamera(v));
         detectButton.setOnClickListener(v -> textRecognition());
+        sendButton.setOnClickListener(v -> sendDetails());
     }
 
     public void launchCamera(View view){
@@ -173,6 +177,7 @@ public class Screen_Scanner extends AppCompatActivity {
                                 saveDebug(debug);
                                 Toast.makeText(this, R.string.scan_success, Toast.LENGTH_SHORT).show();
                                 debug = "";
+                                scanned = true;
                             })
                     .addOnFailureListener(
                             e -> {
@@ -230,6 +235,12 @@ public class Screen_Scanner extends AppCompatActivity {
             fos.close();
         }catch (IOException ie){
             ie.printStackTrace();
+        }
+    }
+
+    private void sendDetails(){
+        if(!scanned){
+            Toast.makeText(this, R.string.scan_not_scanned, Toast.LENGTH_SHORT).show();
         }
     }
 }

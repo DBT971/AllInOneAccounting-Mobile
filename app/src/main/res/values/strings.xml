@@ -19,10 +19,13 @@
     <string name="scan_detect">Detect text</string>
     <string name="scan_empty">No text found</string>
     <string name="scan_desc">Take a photo to scan</string>
-    <string name="scan_saving">Saving...</string>
+    <string name="scan_saving">Saving…</string>
     <string name="scan_fail">Something went wrong trying to load the image </string>
-    <string name="scan_no_image">No image detected, take an image first</string>
-    <string name="scan_success">Your scan has been completed successfully</string>
+    <string name="scan_no_image">No image detected</string>
+    <string name="scan_success">Scan successful</string>
+    <string name="scan_send">Send the text to your accountant</string>
+    <string name="scan_not_scanned">Scan has not been finished </string>
+
     <!-- Settings -->
     <string name="settings_title">Settings</string>
     <string name="settings_preferences_header">Preferences</string>
