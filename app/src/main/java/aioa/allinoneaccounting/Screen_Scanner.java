@@ -12,20 +12,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.renderscript.ScriptGroup;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.util.Pair;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,17 +38,16 @@ import java.util.List;
 
 public class Screen_Scanner extends AppCompatActivity {
 
-    private ImageView image_preview;
-    private GraphicOverlay graphic_overlay;
-    private Button capture_button;
-    private Button detect_button;
-    private Bitmap bit_image;
-    private Integer image_max_height;
-    private Integer image_max_length;
-    public static String cam_direct = "";
-    private File photo_file;
-    private Uri photo_uri;
+    private ImageView imagePreview;
+    private Button captureButton;
+    private Button detectButton;
+    private Bitmap bitImage;
+    private static String camDirect = "";
+    private static String debugDirect = "";
+    private File photoFile;
+    private Uri photoUri;
     private int rotation;
+    private String debug = "";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -61,52 +56,51 @@ public class Screen_Scanner extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.screen_scanner);
 
-        get_permissions();
-        load_views();
+        getPermissions();
+        loadViews();
 
-        cam_direct = getExternalFilesDir(null).getAbsolutePath() + "/aioa_Images";
-
+        camDirect = getExternalFilesDir(null).getAbsolutePath() + "/aioa_Images";
+        debugDirect = getExternalFilesDir(null).getAbsolutePath() + "/aoia_Debug";
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void get_permissions(){
-        int camera_permission = PermissionChecker.checkSelfPermission(this, Manifest.permission.CAMERA);
-        if (camera_permission != PackageManager.PERMISSION_GRANTED){
+    public void getPermissions(){
+        int cameraPermission = PermissionChecker.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if (cameraPermission != PackageManager.PERMISSION_GRANTED){
             requestPermissions(new String[]{Manifest.permission.CAMERA}, 101 );
         }
 
-        int save_permission = PermissionChecker.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if(save_permission != PackageManager.PERMISSION_GRANTED){
+        int savePermission = PermissionChecker.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if(savePermission != PackageManager.PERMISSION_GRANTED){
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 102 );
         }
     }
 
-    public void load_views(){
-        image_preview = findViewById(R.id.image_view);
-        graphic_overlay = findViewById(R.id.graphic_overlay);
-        capture_button = findViewById(R.id.capture_image);
-        detect_button = findViewById(R.id.detect_image);
+    public void loadViews(){
+        imagePreview = findViewById(R.id.image_view);
+        captureButton = findViewById(R.id.capture_image);
+        detectButton = findViewById(R.id.detect_image);
 
-        capture_button.setOnClickListener(v -> launch_camera(v));
-        detect_button.setOnClickListener(v -> text_recognition());
+        captureButton.setOnClickListener(v -> launchCamera(v));
+        detectButton.setOnClickListener(v -> textRecognition());
     }
 
-    public void launch_camera(View view){
+    public void launchCamera(View view){
         Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if(camera_intent.resolveActivity(getPackageManager()) != null){
             try{
-                photo_file = create_image_file();
+                photoFile = createImageFile();
             } catch (IOException e){
                 e.printStackTrace();
             }
-            if(photo_file != null){
-                photo_uri = FileProvider.getUriForFile(this,
+            if(photoFile != null){
+                photoUri = FileProvider.getUriForFile(this,
                         "aioa.Scanner.fileprovider",
-                        photo_file);
+                        photoFile);
 
                 camera_intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY,1);
-                camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, photo_uri);
+                camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(camera_intent, 101);
             }
         }
@@ -118,25 +112,13 @@ public class Screen_Scanner extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == 101 && resultCode == RESULT_OK){
-            bit_image = BitmapFactory.decodeFile(photo_file.getAbsolutePath());
-            rotation = get_camera_orientation(this, photo_uri, photo_file.getAbsolutePath());
+            bitImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+            rotation = getCameraOrientation(this, photoUri, photoFile.getAbsolutePath());
             if(rotation == -1){
                 Toast.makeText(this, R.string.scan_fail, Toast.LENGTH_SHORT).show();
             }
-
-            Pair<Integer, Integer> target_size = getTargetedWidthHeight();
-            int target_width = target_size.first;
-            int max_height = target_size.second;
-            float scaleFactor =
-                  Math.max((float) bit_image.getWidth() / (float) target_width,
-                  (float) bit_image.getHeight() / (float) max_height);
-            Bitmap resized_bitmap = Bitmap.createScaledBitmap(
-                  bit_image,
-                  (int) (bit_image.getWidth() / scaleFactor),
-                  (int) (bit_image.getHeight() / scaleFactor), true);
-
-            image_preview.setRotation(rotation);
-            image_preview.setImageBitmap(resized_bitmap);
+            imagePreview.setRotation(rotation);
+            imagePreview.setImageBitmap(bitImage);
 
         }
         else{
@@ -144,7 +126,7 @@ public class Screen_Scanner extends AppCompatActivity {
         }
     }
 
-    public int get_camera_orientation(Context context, Uri imageUri, String imagePath){
+    public int getCameraOrientation(Context context, Uri imageUri, String imagePath){
          try {
             context.getContentResolver().notifyChange(imageUri, null);
             File imageFile = new File(imagePath);
@@ -169,83 +151,85 @@ public class Screen_Scanner extends AppCompatActivity {
          return -1;
     }
 
-    private File create_image_file() throws IOException {
+    private File createImageFile() throws IOException {
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageName = "AiOA_" + timeStamp +"_";
 
-        File storage_dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        String time_stamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String image_name = "JPG_" + time_stamp +"_";
-
-        File image =File.createTempFile(
-          image_name,
-          ".jpg",
-          storage_dir
-        );
-        cam_direct = image.getAbsolutePath();
+        File image = File.createTempFile(imageName, ".jpg", storageDir);
+        camDirect = image.getAbsolutePath();
         return image;
     }
 
-    public void text_recognition(){
-        InputImage image = InputImage.fromBitmap(bit_image, rotation);
-        TextRecognizer recognizer = TextRecognition.getClient();
-        recognizer.process(image)
-                .addOnSuccessListener(
-                        texts -> {
-                            processTextRecognitionResult(texts);
-                        })
-                .addOnFailureListener(
-                        e -> {
-                            // Task failed with an exception
-                            Toast.makeText(this, R.string.scan_fail, Toast.LENGTH_SHORT).show();
-                            e.printStackTrace();
-                        });
+    public void textRecognition(){
+        try{
+            InputImage image = InputImage.fromBitmap(bitImage, rotation);
+
+            TextRecognizer recognizer = TextRecognition.getClient();
+            recognizer.process(image)
+                    .addOnSuccessListener(
+                            texts -> {
+                                processTextRecognitionResult(texts);
+                                saveDebug(debug);
+                                Toast.makeText(this, R.string.scan_success, Toast.LENGTH_SHORT).show();
+                                debug = "";
+                            })
+                    .addOnFailureListener(
+                            e -> {
+                                Toast.makeText(this, R.string.scan_fail, Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            });
+        } catch (Exception ex){
+            Toast.makeText(this, R.string.scan_no_image, Toast.LENGTH_SHORT).show();
+            ex.printStackTrace();
+        }
+
     }
 
     private void processTextRecognitionResult(Text texts) {
         List<Text.TextBlock> blocks = texts.getTextBlocks();
         if (blocks.size() == 0) {
             Toast.makeText(Screen_Scanner.this, R.string.scan_empty, Toast.LENGTH_SHORT).show();
-            return;
         }
-        graphic_overlay.clear();
-        for (int i = 0; i < blocks.size(); i++) {
-            List<Text.Line> lines = blocks.get(i).getLines();
-            for (int j = 0; j < lines.size(); j++) {
-                List<Text.Element> elements = lines.get(j).getElements();
-                for (int k = 0; k < elements.size(); k++) {
-                    GraphicOverlay.Graphic textGraphic = new TextGraphic(graphic_overlay, elements.get(k));
-                    graphic_overlay.add(textGraphic);
-
+        else{
+            debug += "DEBUG TEXT RECOGNITION: \n";
+            debug += "BLOCKS:\n";
+            for(Text.TextBlock i : blocks){
+                debug += "" + i.getText() + "\n";
+                debug += "\tLINES:\n";
+                for(Text.Line j : i.getLines()){
+                    debug += "\t" + j.getText() + "\n";
+                    debug += "\t\tELEMENTS:\n";
+                    for(Text.Element k : j.getElements()){
+                        debug += "\t\t" + k.getText() + "\n";
+                    }
                 }
             }
         }
     }
 
-    private Integer getImageMaxWidth() {
-        if (image_max_length == null) {
-            image_max_length = image_preview.getWidth();
+    private File createDebugFile() throws IOException{
+        File debugDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+        String debugTime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String debugName = "DBG_" + debugTime + "_";
+
+        File debugFile = new File(debugDir, (debugName + ".txt"));
+        debugDirect = debugFile.getAbsolutePath();
+        return debugFile;
+    }
+
+    private void saveDebug(String dbg){
+        try{
+
+            FileOutputStream fos = new FileOutputStream(createDebugFile());
+            OutputStreamWriter osw = new OutputStreamWriter(fos);
+            osw.write(dbg);
+            osw.flush();
+            osw.close();
+            fos.flush();
+            fos.close();
+        }catch (IOException ie){
+            ie.printStackTrace();
         }
-
-        return image_max_length;
     }
-
-    private Integer getImageMaxHeight() {
-        if (image_max_height == null) {
-            image_max_height = image_preview.getHeight();
-        }
-
-        return image_max_height;
-    }
-
-    // Gets the targeted width / height.
-    private Pair<Integer, Integer> getTargetedWidthHeight() {
-        int targetWidth;
-        int targetHeight;
-        int maxWidthForPortraitMode = getImageMaxWidth();
-        int maxHeightForPortraitMode = getImageMaxHeight();
-        targetWidth = maxWidthForPortraitMode;
-        targetHeight = maxHeightForPortraitMode;
-        return new android.util.Pair<>(targetWidth, targetHeight);
-    }
-
-
 }
