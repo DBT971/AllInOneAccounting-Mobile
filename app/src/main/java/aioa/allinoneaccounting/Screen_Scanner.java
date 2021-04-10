@@ -3,6 +3,7 @@ package aioa.allinoneaccounting;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,14 +18,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import okhttp3.Credentials;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.OkHttpClient;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +48,9 @@ import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Screen_Scanner extends AppCompatActivity {
 
     private ImageView imagePreview;
@@ -54,6 +65,8 @@ public class Screen_Scanner extends AppCompatActivity {
     private Uri photoUri;
     private int rotation;
     private String debug = "";
+    private String debugFame = "";
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -227,6 +240,7 @@ public class Screen_Scanner extends AppCompatActivity {
         String debugName = "DBG_" + debugTime + "_";
 
         File debugFile = new File(debugDir, (debugName + ".txt"));
+        debugFame = debugFile.getName();
         debugDirect = debugFile.getAbsolutePath();
         return debugFile;
     }
@@ -251,7 +265,9 @@ public class Screen_Scanner extends AppCompatActivity {
             Toast.makeText(this, R.string.scan_not_scanned, Toast.LENGTH_SHORT).show();
         }
         else{
-            serverConnector();
+            //serverConnector();
+            postData();
+
         }
     }
 
@@ -269,6 +285,40 @@ public class Screen_Scanner extends AppCompatActivity {
                 }
             } catch (IOException ioe) {
                 ioe.printStackTrace();
+            }
+        }).start();
+    }
+
+    private void postData(){
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            String username = "prototype";
+            String password ="protopass";
+            File file = new File(debugDirect);
+
+            RequestBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("username", username)
+                    .addFormDataPart("password", password)
+                    .addFormDataPart("file", debugFame, RequestBody.create(file, MediaType.parse("text/csv")))
+                    .build();
+
+            Request request = new Request.Builder()
+                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .url("http://toddhaward.mmaps.org/uploads.php")
+                    .post(requestBody)
+                    .build();
+
+            System.out.println("\n\nREQUEST " + request.body().toString());
+
+            try(Response response = client.newCall(request).execute()){
+                if(response.isSuccessful()){
+                    runOnUiThread(() -> Toast.makeText(Screen_Scanner.this, R.string.scan_server_success, Toast.LENGTH_SHORT).show());
+                }else{
+                    runOnUiThread(() -> Toast.makeText(Screen_Scanner.this, R.string.scan_server_failure, Toast.LENGTH_SHORT).show());
+                }
+            }catch(IOException ie){
+                ie.printStackTrace();
             }
         }).start();
 
