@@ -17,11 +17,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.OkHttpClient;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,15 +40,14 @@ import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 
-import java.util.Date;
-import java.util.List;
-
 public class Screen_Scanner extends AppCompatActivity {
 
     private ImageView imagePreview;
     private Button captureButton;
     private Button detectButton;
+    private Button sendButton;
     private Bitmap bitImage;
+    private boolean scanned = false;
     private static String camDirect = "";
     private static String debugDirect = "";
     private File photoFile;
@@ -74,15 +80,21 @@ public class Screen_Scanner extends AppCompatActivity {
         if(savePermission != PackageManager.PERMISSION_GRANTED){
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 102 );
         }
+        int internetPermission = PermissionChecker.checkSelfPermission(this, Manifest.permission.INTERNET);
+        if (internetPermission != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.INTERNET}, 103 );
+        }
     }
 
     public void loadViews(){
         imagePreview = findViewById(R.id.image_view);
         captureButton = findViewById(R.id.capture_image);
         detectButton = findViewById(R.id.detect_image);
+        sendButton = findViewById(R.id.send_details);
 
         captureButton.setOnClickListener(v -> launchCamera(v));
         detectButton.setOnClickListener(v -> textRecognition());
+        sendButton.setOnClickListener(v -> sendDetails());
     }
 
     public void launchCamera(View view){
@@ -173,6 +185,7 @@ public class Screen_Scanner extends AppCompatActivity {
                                 saveDebug(debug);
                                 Toast.makeText(this, R.string.scan_success, Toast.LENGTH_SHORT).show();
                                 debug = "";
+                                scanned = true;
                             })
                     .addOnFailureListener(
                             e -> {
@@ -231,5 +244,33 @@ public class Screen_Scanner extends AppCompatActivity {
         }catch (IOException ie){
             ie.printStackTrace();
         }
+    }
+
+    private void sendDetails(){
+        if(!scanned){
+            Toast.makeText(this, R.string.scan_not_scanned, Toast.LENGTH_SHORT).show();
+        }
+        else{
+            serverConnector();
+        }
+    }
+
+    private void serverConnector(){
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://toddhaward.mmaps.org/")
+                    .build();
+            try(Response response = client.newCall(request).execute()) {
+                if(response.isSuccessful()){
+                    runOnUiThread(() -> Toast.makeText(Screen_Scanner.this, R.string.scan_server_success, Toast.LENGTH_SHORT).show());
+                }else{
+                    runOnUiThread(() -> Toast.makeText(Screen_Scanner.this, R.string.scan_server_failure, Toast.LENGTH_SHORT).show());
+                }
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        }).start();
+
     }
 }
