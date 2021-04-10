@@ -17,11 +17,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.OkHttpClient;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,9 +39,6 @@ import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
-
-import java.util.Date;
-import java.util.List;
 
 public class Screen_Scanner extends AppCompatActivity {
 
@@ -75,6 +79,10 @@ public class Screen_Scanner extends AppCompatActivity {
         int savePermission = PermissionChecker.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if(savePermission != PackageManager.PERMISSION_GRANTED){
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 102 );
+        }
+        int internetPermission = PermissionChecker.checkSelfPermission(this, Manifest.permission.INTERNET);
+        if (internetPermission != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.INTERNET}, 103 );
         }
     }
 
@@ -242,5 +250,27 @@ public class Screen_Scanner extends AppCompatActivity {
         if(!scanned){
             Toast.makeText(this, R.string.scan_not_scanned, Toast.LENGTH_SHORT).show();
         }
+        else{
+            serverConnector();
+        }
+    }
+
+    private void serverConnector(){
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://toddhaward.mmaps.org/")
+                    .build();
+            try(Response response = client.newCall(request).execute()) {
+                if(response.isSuccessful()){
+                    runOnUiThread(() -> Toast.makeText(Screen_Scanner.this, R.string.scan_server_success, Toast.LENGTH_SHORT).show());
+                }else{
+                    runOnUiThread(() -> Toast.makeText(Screen_Scanner.this, R.string.scan_server_failure, Toast.LENGTH_SHORT).show());
+                }
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        }).start();
+
     }
 }

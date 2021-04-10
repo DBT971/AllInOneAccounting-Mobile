@@ -25,6 +25,8 @@
     <string name="scan_success">Scan successful</string>
     <string name="scan_send">Send the text to your accountant</string>
     <string name="scan_not_scanned">Scan has not been finished </string>
+    <string name="scan_server_success">Connected successfully</string>
+    <string name="scan_server_failure">Connection failed</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
