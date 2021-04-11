@@ -265,30 +265,9 @@ public class Screen_Scanner extends AppCompatActivity {
             Toast.makeText(this, R.string.scan_not_scanned, Toast.LENGTH_SHORT).show();
         }
         else{
-            //serverConnector();
             postData();
-
         }
     }
-
-    private void serverConnector(){
-        new Thread(() -> {
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url("http://toddhaward.mmaps.org/")
-                    .build();
-            try(Response response = client.newCall(request).execute()) {
-                if(response.isSuccessful()){
-                    runOnUiThread(() -> Toast.makeText(Screen_Scanner.this, R.string.scan_server_success, Toast.LENGTH_SHORT).show());
-                }else{
-                    runOnUiThread(() -> Toast.makeText(Screen_Scanner.this, R.string.scan_server_failure, Toast.LENGTH_SHORT).show());
-                }
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
-        }).start();
-    }
-
     private void postData(){
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient();
