@@ -21,7 +21,7 @@ public class Screen_Login extends AppCompatActivity {
 
         SharedPreferences pref = getSharedPreferences("mode", Context.MODE_PRIVATE);
         final String patternl = pref.getString("pattern","");
-        final Intent intent = new Intent(this, Screen_Menu.class);
+        final Intent intent = new Intent(this, Screen_Scanner.class);
 
         if (patternl.equals("")){
             startActivity(intent);

@@ -31,9 +31,8 @@
             android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="aioa.allinoneaccounting.Screen_Menu"/>
+                android:value="aioa.allinoneaccounting.Screen_Scanner"/>
         </activity>
-        <activity android:name=".Screen_Menu" />
         <activity android:name=".Screen_Login" />
         <activity android:name=".Screen_Pattern" />
         <activity android:name=".Screen_Scanner"/>

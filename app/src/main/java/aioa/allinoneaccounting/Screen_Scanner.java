@@ -57,6 +57,7 @@ public class Screen_Scanner extends AppCompatActivity {
     private Button captureButton;
     private Button detectButton;
     private Button sendButton;
+    private Button settingsButton;
     private Bitmap bitImage;
     private boolean scanned = false;
     private static String camDirect = "";
@@ -104,10 +105,13 @@ public class Screen_Scanner extends AppCompatActivity {
         captureButton = findViewById(R.id.capture_image);
         detectButton = findViewById(R.id.detect_image);
         sendButton = findViewById(R.id.send_details);
+        settingsButton = findViewById(R.id.settings);
 
         captureButton.setOnClickListener(v -> launchCamera(v));
         detectButton.setOnClickListener(v -> textRecognition());
         sendButton.setOnClickListener(v -> sendDetails());
+        settingsButton.setOnClickListener(v -> openSettings());
+
     }
 
     public void launchCamera(View view){
@@ -268,6 +272,12 @@ public class Screen_Scanner extends AppCompatActivity {
             postData();
         }
     }
+
+    public void openSettings(){
+        Intent preferences_intent = new Intent(this, Screen_Settings.class);
+        startActivity(preferences_intent);
+    }
+
     private void postData(){
         new Thread(() -> {
             OkHttpClient client = new OkHttpClient();
@@ -284,7 +294,7 @@ public class Screen_Scanner extends AppCompatActivity {
 
             Request request = new Request.Builder()
                     .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                    .url("http://toddhaward.mmaps.org/uploads.php")
+                    .url("https://mmaps.org/uploads.php")
                     .post(requestBody)
                     .build();
 
